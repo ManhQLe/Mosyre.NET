@@ -27,10 +27,11 @@ namespace Mosyre
 		}
 
 		public T GetAgrementProp<T>(string name, T defaultValue=default(T)) {
-			object x = _agreement[name];
-			if (x == null) {
-				_agreement[name] = x = defaultValue;
+			
+			if (!_agreement.ContainsKey(name)) {
+				_agreement[name] = defaultValue;
 			}
+			object x = _agreement[name];
 			return x == null ? default(T) : (T)x;
 		}
 

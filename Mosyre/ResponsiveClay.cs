@@ -101,7 +101,8 @@ namespace Mosyre
 				if (_collectedPoints.Count == cps.Count)
 				{
 					Response(this, connectPoint);
-
+					if (Stage)
+						_collectedPoints.Clear();
 				}
 
 			}
