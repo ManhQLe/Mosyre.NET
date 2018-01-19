@@ -8,14 +8,14 @@ namespace Mosyre
 {
 	public class Conduit : AttribClay
 	{
-		List<KeyValuePair<object, IClay>> _contacts;
+		Dictionary<IClay, List<object>> _contacts;
 
 		public Conduit():this(new Dictionary<string, object>()) {
 		}
 
 		public Conduit(Dictionary<string, object> agreement) : base(agreement)
 		{
-			_contacts = new List<KeyValuePair<object, IClay>>();
+			_contacts = new Dictionary<IClay, List<object>>();
 		}
 
 		public object Signal {
@@ -24,12 +24,45 @@ namespace Mosyre
 
 		public override void onCommunication(IClay fromClay, object atConnectionPoint, object signal)
 		{
-			
+			foreach (IClay c in _contacts.Keys)
+			{
+				List<object> cps = _contacts[c];
+
+				foreach (object cp in cps)
+				{
+					if (!cp.Equals(atConnectionPoint) || c != fromClay)
+					{
+						c.onCommunication(this, cp, signal);
+					}						
+				}
+			}
 		}
 
 		public override void onConnection(IClay withClay, object atConnectionPoint)
 		{
-			int dix = _contacts.fin
+			//Get all current connection with this clays
+			List<object> cps = _contacts[withClay];
+
+			cps = cps == null ? new List<object>() : cps;
+
+			if (cps.Count > 0 && withClay is Conduit) // Conduit only allow 1 connection
+				return;
+
+			bool shouldInclude = true;
+
+			foreach (object cp in cps) {
+				if (cp.Equals(atConnectionPoint))
+				{
+					shouldInclude = false;
+					break;
+				}
+			}
+
+			if (shouldInclude)
+			{
+				cps.Add(atConnectionPoint);
+				_contacts[withClay] = cps;
+			}
 		}
 	}
 }
