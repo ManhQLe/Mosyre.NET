@@ -12,14 +12,14 @@ namespace Mosyre
 
 	public class ResponsiveClay: AttribClay
 	{
-		Dictionary<object, IClay> _contacts;
+		Dictionary<object, List<IClay>> _contacts;
 		Dictionary<object, object> _signalStore;
 		List<object> _collectedPoints;
+		int _init = 0;
 		public ResponsiveClay(Dictionary<string,object> agr) : base(agr) {
-			_contacts = new Dictionary<object, IClay>();
+			_contacts = new Dictionary<object, List<IClay>>();
 			_signalStore = new Dictionary<object, object>();
-			_collectedPoints = new List<object>();
-
+			_collectedPoints = new List<object>();			
 		}
 
 		public T GetInput<T>(object connectPoint) {
@@ -27,46 +27,27 @@ namespace Mosyre
 			return o == null ? default(T) : (T)o;
 		}
 
-		public InitFunc Init {
-			get { return GetAgrementProp<InitFunc>("Init", defaultInit); }
-			set {
-				_agreement["Init"] = value;
-			}
-		}
-
-		public ResponseFunc Response {
-			get {
-				return GetAgrementProp<ResponseFunc>("Response", defaultResponse);
-			}
-			set {
-				_agreement["Response"] = value;
-			}
-		}
-
 		public bool Stage {
 			get {
-				return GetAgrementProp<bool>("Stage", false);
+				return GetAgreementProp<bool>("Stage", false);
 			}
 			set {
 				SetAgrementProp("Stage", value);
 			}
 		}
 
-		public object this[object connectPoint] {
+		protected object this[object connectPoint] {
 			get {
 				return _signalStore[connectPoint];
 			}
-			set {
-						
-
-				signalProcessing(connectPoint, value);
-				
+			set {						
+				signalProcessing(connectPoint, value);				
 			}
 		}
 
 		public List<object> ConnectPoints {
 			get {
-				return GetAgrementProp<List<object>>("ConnectPoints", new List<object>());
+				return GetAgreementProp<List<object>>("ConnectPoints", new List<object>());
 			}
 			set {
 				_agreement["ConnectPoints"] = value;
@@ -75,15 +56,23 @@ namespace Mosyre
 
 		public override void onCommunication(IClay fromClay, object atConnectionPoint, object signal)
 		{
+			if (++_init == 1) onInit();
 			//Check to see if it is in connectiton list
-			if (_contacts[atConnectionPoint] == fromClay) {
+			if (_contacts.ContainsKey(atConnectionPoint)) {
 				this[atConnectionPoint] = signal;
 			}
 		}
 
 		public override void onConnection(IClay withClay, object atConnectionPoint)
 		{
-			_contacts[atConnectionPoint] = withClay;
+			List<IClay> others = _contacts[atConnectionPoint];
+			others = others ?? new List<IClay>();
+			if (others.IndexOf(withClay)<0)
+			{
+				others.Add(withClay);				
+			}
+			_contacts[atConnectionPoint] = others;
+
 		}
 
 		private void signalProcessing(object connectPoint, object signal) {
@@ -100,7 +89,7 @@ namespace Mosyre
 
 				if (_collectedPoints.Count == cps.Count)
 				{
-					Response(this, connectPoint);
+					onResponse(connectPoint);
 					if (Stage)
 						_collectedPoints.Clear();
 				}
@@ -108,18 +97,22 @@ namespace Mosyre
 			}
 			else // Output
 			{
-				IClay o = _contacts[connectPoint];
-				o?.onCommunication(this, connectPoint, signal);
+				List<IClay> others = _contacts[connectPoint];
+				foreach (IClay c in others)
+				{
+					c.onCommunication(this, connectPoint, signal);
+				}
 			}
 		}
 
-		static private void defaultResponse(ResponsiveClay c, object connectPoint)
+		virtual protected void onResponse(object connectPoint)
 		{
-			
+			GetAgreementProp<ResponseFunc>("Response")?.Invoke(this, connectPoint);
 		}
-		static private void defaultInit(ResponsiveClay c)
-		{
 
+		virtual protected void onInit()
+		{
+			GetAgreementProp<InitFunc>("Init")?.Invoke(this);
 		}
 
 	}

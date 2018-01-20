@@ -12,7 +12,7 @@ namespace Mosyre
 		protected Dictionary<string,object> _agreement;		
 
 		public AttribClay(Dictionary<string, object> agreement) {
-			Agreement = agreement;
+			Agreement = agreement??new Dictionary<string, object>();
 		}
 
 		public Dictionary<string, object> Agreement { get => _agreement; set => _agreement = value; }				
@@ -26,7 +26,7 @@ namespace Mosyre
 			
 		}
 
-		public T GetAgrementProp<T>(string name, T defaultValue=default(T)) {
+		public T GetAgreementProp<T>(string name, T defaultValue=default(T)) {
 			
 			if (!_agreement.ContainsKey(name)) {
 				_agreement[name] = defaultValue;

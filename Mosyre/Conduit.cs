@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Mosyre
@@ -9,7 +10,7 @@ namespace Mosyre
 	public class Conduit : AttribClay
 	{
 		Dictionary<IClay, List<object>> _contacts;
-
+		bool _parallelTrx = false;
 		public Conduit():this(new Dictionary<string, object>()) {
 		}
 
@@ -22,6 +23,11 @@ namespace Mosyre
 			set { }
 		}
 
+		public bool ParallelTrx {
+			get { return _parallelTrx;}
+			set { _parallelTrx = true; }
+		}
+
 		public override void onCommunication(IClay fromClay, object atConnectionPoint, object signal)
 		{
 			foreach (IClay c in _contacts.Keys)
@@ -32,7 +38,13 @@ namespace Mosyre
 				{
 					if (!cp.Equals(atConnectionPoint) || c != fromClay)
 					{
-						c.onCommunication(this, cp, signal);
+						if (ParallelTrx)
+						{
+							c.onCommunication(this, cp, signal);
+							new Thread(() => _ThreadVibrate(this,c, cp, signal)).Start();
+						}
+						else
+							c.onCommunication(this, cp, signal);
 					}						
 				}
 			}
@@ -63,6 +75,10 @@ namespace Mosyre
 				cps.Add(atConnectionPoint);
 				_contacts[withClay] = cps;
 			}
+		}
+
+		static void _ThreadVibrate(IClay from, IClay target, object cp, object signal) {
+			target.onCommunication(from, cp, signal);
 		}
 	}
 }

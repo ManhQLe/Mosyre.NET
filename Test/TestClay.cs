@@ -17,13 +17,13 @@ namespace Test
 				{"B",false }
 			});
 
-			Assert(C.GetAgrementProp<int>("A"), 1);
+			Assert(C.GetAgreementProp<int>("A"), 1);
 
-			Assert(C.GetAgrementProp<int>("A", 2), 1);
+			Assert(C.GetAgreementProp<int>("A", 2), 1);
 
-			Assert(C.GetAgrementProp<bool>("B"), false);
+			Assert(C.GetAgreementProp<bool>("B"), false);
 
-			Assert(C.GetAgrementProp<decimal>("C", 1.0m), 1.0m);
+			Assert(C.GetAgreementProp<decimal>("C", 1.0m), 1.0m);
 
 		}
 	}
