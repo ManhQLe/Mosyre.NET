@@ -32,7 +32,7 @@ namespace Mosyre
 				return GetAgreementProp<bool>("Stage", false);
 			}
 			set {
-				SetAgrementProp("Stage", value);
+				SetAgreementProp("Stage", value);
 			}
 		}
 
@@ -54,6 +54,10 @@ namespace Mosyre
 			}
 		}
 
+		public T GetSignals<T>(object connectPoint) {
+			return (T)this[connectPoint];
+		}
+
 		public override void onCommunication(IClay fromClay, object atConnectionPoint, object signal)
 		{
 			if (++_init == 1) onInit();
@@ -65,7 +69,9 @@ namespace Mosyre
 
 		public override void onConnection(IClay withClay, object atConnectionPoint)
 		{
-			List<IClay> others = _contacts[atConnectionPoint];
+			List<IClay> others = _contacts.ContainsKey(atConnectionPoint)
+				? _contacts[atConnectionPoint] : new List<IClay>();
+			
 			others = others ?? new List<IClay>();
 			if (others.IndexOf(withClay)<0)
 			{

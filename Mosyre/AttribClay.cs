@@ -35,7 +35,7 @@ namespace Mosyre
 			return x == null ? default(T) : (T)x;
 		}
 
-		public void SetAgrementProp(string name, object v) {
+		public void SetAgreementProp(string name, object v) {
 			_agreement[name] = v;
 		}
 

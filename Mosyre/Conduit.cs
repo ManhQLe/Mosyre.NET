@@ -53,9 +53,9 @@ namespace Mosyre
 		public override void onConnection(IClay withClay, object atConnectionPoint)
 		{
 			//Get all current connection with this clays
-			List<object> cps = _contacts[withClay];
-
-			cps = cps == null ? new List<object>() : cps;
+			List<object> cps = _contacts.ContainsKey(withClay)
+				? _contacts[withClay]
+				: new List<object>();			
 
 			if (cps.Count > 0 && withClay is Conduit) // Conduit only allow 1 connection
 				return;

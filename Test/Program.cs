@@ -12,6 +12,9 @@ namespace Test
 		{
 			TestClay t1 = new TestClay();
 			t1.Run(args);
+
+			TestResponsiveClay t2 = new TestResponsiveClay();
+			t2.Run(args);
 		}
 	}
 }
