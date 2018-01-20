@@ -16,6 +16,9 @@ namespace Mosyre
 		Dictionary<object, object> _signalStore;
 		List<object> _collectedPoints;
 		int _init = 0;
+		public ResponsiveClay() : this(null) {
+		}
+
 		public ResponsiveClay(Dictionary<string,object> agr) : base(agr) {
 			_contacts = new Dictionary<object, List<IClay>>();
 			_signalStore = new Dictionary<object, object>();
@@ -62,9 +65,12 @@ namespace Mosyre
 		{
 			if (++_init == 1) onInit();
 			//Check to see if it is in connectiton list
-			if (_contacts.ContainsKey(atConnectionPoint)) {
+			if (_contacts.ContainsKey(atConnectionPoint) &&
+				_contacts[atConnectionPoint].IndexOf(fromClay) >= 0
+				)
+			{
 				this[atConnectionPoint] = signal;
-			}
+			}			
 		}
 
 		public override void onConnection(IClay withClay, object atConnectionPoint)
