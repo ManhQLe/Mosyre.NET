@@ -7,19 +7,19 @@ using System.Threading.Tasks;
 
 namespace Mosyre
 {
-	public delegate void ResponseFunc(ResponsiveClay c,object connectPoint = null);
-	public delegate void InitFunc(ResponsiveClay c);
+	public delegate void ResponseFunc(RCLay c,object connectPoint = null);
+	public delegate void InitFunc(RCLay c);
 
-	public class ResponsiveClay: AttribClay
+	public class RCLay: AttribClay
 	{
 		Dictionary<object, List<IClay>> _contacts;
 		Dictionary<object, object> _signalStore;
 		List<object> _collectedPoints;
 		int _init = 0;
-		public ResponsiveClay() : this(null) {
+		public RCLay() : this(null) {
 		}
 
-		public ResponsiveClay(Dictionary<string,object> agr) : base(agr) {
+		public RCLay(Dictionary<string,object> agr) : base(agr) {
 			_contacts = new Dictionary<object, List<IClay>>();
 			_signalStore = new Dictionary<object, object>();
 			_collectedPoints = new List<object>();			

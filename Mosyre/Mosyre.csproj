@@ -45,7 +45,7 @@
     <Compile Include="Conduit.cs" />
     <Compile Include="IClay.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ResponsiveClay.cs" />
+    <Compile Include="RCLay.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

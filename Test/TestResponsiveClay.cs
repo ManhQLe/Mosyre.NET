@@ -20,18 +20,18 @@ namespace Test
 
 		public override void Test()
 		{
-			ResponsiveClay other = new ResponsiveClay();
+			RCLay other = new RCLay();
 
 			int Result = 0;
 			int Inited = 0;
-			ResponseFunc r = (ResponsiveClay rc, object cp) => {
+			ResponseFunc r = (RCLay rc, object cp) => {
 				int A = rc.GetSignals<int>("A");
 				int B = rc.GetSignals<int>("B");
 				Result = A + B;
 			};
-			InitFunc i = (ResponsiveClay rc) => { Inited++; };
+			InitFunc i = (RCLay rc) => { Inited++; };
 
-			ResponsiveClay c = new ResponsiveClay(new Dictionary<string, object> {
+			RCLay c = new RCLay(new Dictionary<string, object> {
 				{"P1",1 },
 				{"P2",2 },
 				{"ConnectPoints", new List<object>{ "A","B" } },
