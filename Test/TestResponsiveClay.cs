@@ -20,18 +20,18 @@ namespace Test
 
 		public override void Test()
 		{
-			RCLay other = new RCLay();
+			RClay other = new RClay();
 
 			int Result = 0;
 			int Inited = 0;
-			ResponseFunc r = (RCLay rc, object cp) => {
+			ResponseFunc r = (RClay rc, object cp) => {
 				int A = rc.GetSignals<int>("A");
 				int B = rc.GetSignals<int>("B");
 				Result = A + B;
 			};
-			InitFunc i = (RCLay rc) => { Inited++; };
+			InitFunc i = (RClay rc) => { Inited++; };
 
-			RCLay c = new RCLay(new Dictionary<string, object> {
+			RClay c = new RClay(new Dictionary<string, object> {
 				{"P1",1 },
 				{"P2",2 },
 				{"ConnectPoints", new List<object>{ "A","B" } },
@@ -80,6 +80,7 @@ namespace Test
 			//Make sure that all signals got cleared again
 			//And the result is still the same because response has not been called
 			Assert(Result, 15);
+
 		}
 	}
 }

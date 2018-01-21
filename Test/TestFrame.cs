@@ -30,7 +30,7 @@ namespace Test
 
 		public void Assert(object actual, object expect) {
 			if (!actual.Equals(expect))
-				throw new Exception($"Actual: {actual} is not the same as {expect}");
+				throw new Exception($"Actual result: {actual} is not the same as expected: {expect}");
 		}
 	}
 }

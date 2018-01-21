@@ -15,6 +15,9 @@ namespace Test
 
 			TestResponsiveClay t2 = new TestResponsiveClay();
 			t2.Run(args);
+
+			TestConduit t3 = new TestConduit();
+			t3.Run(args);
 		}
 	}
 }
