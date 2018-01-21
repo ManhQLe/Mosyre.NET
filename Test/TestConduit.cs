@@ -31,6 +31,7 @@ namespace Test
 		{
 			int Result = 0;
 			int Result2 = 0;
+			int Result3 = 0;
 			ResponseFunc f = (RClay rc, object cp) => {
 				int A = Result = rc.GetSignals<int>("X");
 				int B = Result = rc.GetSignals<int>("Y");
@@ -40,6 +41,12 @@ namespace Test
 			ResponseFunc f2 = (RClay rc, object cp) =>
 			{
 				Result2 = rc.GetSignals<int>("A");
+			};
+
+			ResponseFunc f3 = (RClay rc, object cp) =>
+			{
+				Console.WriteLine("Adding...");
+				Result3 += rc.GetSignals<int>("A");
 			};
 
 			RClay R = new RClay(new Dictionary<string, object>(){
@@ -52,6 +59,10 @@ namespace Test
 				{ "ConnectPoints",new List<Object>{"A"} }
 			});
 
+			RClay R3 = new RClay(new Dictionary<string, object> {
+				{ "Response",f3},
+				{ "ConnectPoints",new List<Object>{"A"} }
+			});
 
 			Conduit con = Conduit.Link(this, "X", "X", R);
 			
@@ -70,12 +81,27 @@ namespace Test
 			Assert(Result2, 2);
 
 
-			con.ParallelTrx = true; //Enable parallel transmission
+			//con.ParallelTrx = true; //Enable parallel transmission
 			Signal = 3;
 			Thread.Sleep(100); //Wait
 
 			Assert(Result, 6);
 			Assert(Result2, 3);
+
+			Conduit con2 = Conduit.Link(con, "RANDOM");
+			con2.Connect(R3, "A");
+			con2.Connect(con, "CDE");
+
+
+			Signal = 7;
+			Thread.Sleep(100); //Wait
+			Assert(Result, 14);
+			Assert(Result2, 7);
+			Signal = 7;
+			//No Bounce
+			Assert(Result3, 7);
+
+
 
 		}
 	}

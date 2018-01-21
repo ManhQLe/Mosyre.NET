@@ -9,7 +9,7 @@ namespace Mosyre
 {
 	public class Conduit : AttribClay
 	{
-		Dictionary<IClay, List<object>> _contacts;
+		public Dictionary<IClay, List<object>> _contacts;
 		bool _parallelTrx = true;
 		public Conduit() : this(new Dictionary<string, object>()) {
 		}
@@ -26,25 +26,24 @@ namespace Mosyre
 		}
 
 		public override void onCommunication(IClay fromClay, object atConnectionPoint, object signal)
-		{
-			if (!_contacts.ContainsKey(fromClay))
-				return;
+		{			
 
-			foreach (IClay c in _contacts.Keys)
+			if (_contacts.ContainsKey(fromClay) && _contacts[fromClay].IndexOf(atConnectionPoint) >= 0)
 			{
-				List<object> cps = _contacts[c];
 
-				foreach (object cp in cps)
+				foreach (IClay c in _contacts.Keys)
 				{
-					if (!cp.Equals(atConnectionPoint) || c != fromClay)
+					List<object> cps = _contacts[c];
+				
+					foreach (object cp in cps)
 					{
-						if (ParallelTrx)
-						{
-							c.onCommunication(this, cp, signal);
-							new Thread(() => _ThreadVibrate(this, c, cp, signal)).Start();
-						}
-						else
-							c.onCommunication(this, cp, signal);
+						if (!cp.Equals(atConnectionPoint) || c != fromClay)
+						{							
+							if (ParallelTrx)							
+								new Thread(() => _ThreadVibrate(this, c, cp, signal)).Start();							
+							else
+								c.onCommunication(this, cp, signal);							
+						}							
 					}
 				}
 			}
