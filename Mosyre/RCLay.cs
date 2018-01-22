@@ -78,7 +78,6 @@ namespace Mosyre
 			List<IClay> others = _contacts.ContainsKey(atConnectionPoint)
 				? _contacts[atConnectionPoint] : new List<IClay>();
 			
-			others = others ?? new List<IClay>();
 			if (others.IndexOf(withClay)<0)
 			{
 				others.Add(withClay);				
@@ -101,9 +100,9 @@ namespace Mosyre
 
 				if (_collectedPoints.Count == cps.Count)
 				{
-					onResponse(connectPoint);
 					if (Stage)
 						_collectedPoints.Clear();
+					onResponse(connectPoint);					
 				}
 
 			}

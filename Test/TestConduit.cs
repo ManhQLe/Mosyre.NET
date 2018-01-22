@@ -45,7 +45,6 @@ namespace Test
 
 			ResponseFunc f3 = (RClay rc, object cp) =>
 			{
-				Console.WriteLine("Adding...");
 				Result3 += rc.GetSignals<int>("A");
 			};
 

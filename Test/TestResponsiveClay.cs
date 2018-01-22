@@ -73,13 +73,20 @@ namespace Test
 			//Make sure that Stage did clear all signals
 			//And result should be the same as the previous
 			Assert(Result, 6);
+
+			//Assign information to B again
+			c.onCommunication(this, "B", 8);
+			// Make sure no change			
+			//And result should be the same as the previous
+			Assert(Result, 6);
+
 			c.onCommunication(this, "A", 8);
-			Assert(Result, 15);
+			Assert(Result, 16);
 
 			c.onCommunication(this, "B", 1);
 			//Make sure that all signals got cleared again
 			//And the result is still the same because response has not been called
-			Assert(Result, 15);
+			Assert(Result, 16);
 
 		}
 	}
