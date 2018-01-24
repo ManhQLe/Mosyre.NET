@@ -86,14 +86,19 @@ namespace Mosyre
 			return this;
 		}
 
-		public static Conduit Link(IClay c, object atConnectionPoint){
-			return new Conduit()
-			.Connect(c, atConnectionPoint);			
+		public static Conduit CreateLink(params object[] obs) {
+			var con = new Conduit();				
+			return con.Link(obs);
 		}
 
-		public static Conduit Link(IClay c1, object cp1, object cp2, IClay c2) {
-			return Link(c1, cp1)
-				.Connect(c2, cp2);
+
+		public Conduit Link(params object[] obs)
+		{
+			int i = 0;
+			for (; i < obs.Length; i += 2) {
+				this.Connect(obs[i] as IClay, obs[i + 1]);
+			}			
+			return this;
 		}
 	}
 }

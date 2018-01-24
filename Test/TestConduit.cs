@@ -63,7 +63,7 @@ namespace Test
 				{ "ConnectPoints",new List<Object>{"A"} }
 			});
 
-			Conduit con = Conduit.Link(this, "X", "X", R);
+			Conduit con = Conduit.CreateLink(this, "X", R, "X");
 			
 			con.Connect(R, "Y");
 			con.Connect(R2, "A");
@@ -87,7 +87,7 @@ namespace Test
 			Assert(Result, 6);
 			Assert(Result2, 3);
 
-			Conduit con2 = Conduit.Link(con, "RANDOM");
+			Conduit con2 = Conduit.CreateLink(con, "RANDOM");
 			con2.Connect(R3, "A");
 			con2.Connect(con, "CDE");
 
