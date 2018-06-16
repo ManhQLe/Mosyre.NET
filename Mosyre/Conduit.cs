@@ -38,9 +38,11 @@ namespace Mosyre
 					foreach (object cp in cps)
 					{
 						if (!cp.Equals(atConnectionPoint) || c != fromClay)
-						{							
-							if (ParallelTrx)							
-								new Thread(() => _ThreadVibrate(this, c, cp, signal)).Start();							
+						{
+							
+							if (ParallelTrx)
+								Task.Run(() => _ThreadVibrate(this, c, cp, signal));
+								//new Thread(() => _ThreadVibrate(this, c, cp, signal)).Start();							
 							else
 								c.onCommunication(this, cp, signal);							
 						}							

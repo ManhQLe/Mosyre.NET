@@ -15,14 +15,15 @@ namespace Mosyre
 		Dictionary<object, List<IClay>> _contacts;
 		Dictionary<object, object> _signalStore;
 		List<object> _collectedPoints;
-		int _init = 0;
+
 		public RClay() : this(null) {
 		}
 
 		public RClay(Dictionary<string,object> agr) : base(agr) {
 			_contacts = new Dictionary<object, List<IClay>>();
 			_signalStore = new Dictionary<object, object>();
-			_collectedPoints = new List<object>();			
+			_collectedPoints = new List<object>();
+			onInit();
 		}
 
 		public T GetInput<T>(object connectPoint) {
@@ -63,7 +64,7 @@ namespace Mosyre
 
 		public override void onCommunication(IClay fromClay, object atConnectionPoint, object signal)
 		{
-			if (++_init == 1) onInit();
+
 			//Check to see if it is in connectiton list
 			if (_contacts.ContainsKey(atConnectionPoint) &&
 				_contacts[atConnectionPoint].IndexOf(fromClay) >= 0
