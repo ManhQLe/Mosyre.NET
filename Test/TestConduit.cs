@@ -34,7 +34,7 @@ namespace Test
 			int Result3 = 0;
 			ResponseFunc f = (RClay rc, object cp) => {
 				int A = Result = rc.GetSignals<int>("X");
-				int B = Result = rc.GetSignals<int>("Y");
+				int B = Result = rc.GetSignals<int>("Y");				
 				Result = A + B;
 			};
 

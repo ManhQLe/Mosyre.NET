@@ -18,6 +18,9 @@ namespace Test
 
 			TestConduit t3 = new TestConduit();
 			t3.Run(args);
+
+			var t4 = new TestSClay();
+			t4.Run(args);
 		}
 	}
 }

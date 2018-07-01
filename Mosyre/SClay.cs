@@ -23,8 +23,8 @@ namespace Mosyre
 			_map= this.onBuild();			
 
 			foreach (var e in _map) {
-				this.contactPoints.Add(e.connectPoint);
-				Clay.MakeConnection(this, e.WithClay, e.connectPoint, e.atConnectionpoint);
+				this.contactPoints.Add(e.HostConnectPoint);
+				Clay.MakeConnection(this, e.WithClay, e.HostConnectPoint, e.AtConnectionPoint);
 			}
 
 		}
@@ -48,15 +48,16 @@ namespace Mosyre
 				foreach (var c in clays)
 				{
 					if (c != fromClay)
-						c.onCommunication(this, r.connectPoint, signal);
+						c.onCommunication(this, r.HostConnectPoint, signal);
 				}
 			}
-			else {
+			else {				
+
 				var clays = _contacts[atConnectionPoint];
 				if (clays != null) {
-					foreach (var m in _map) {
-						if (m.connectPoint == atConnectionPoint) {
-							m.WithClay.onCommunication(this, m.atConnectionpoint, signal);
+					foreach (var m in _map) {						
+						if (m.HostConnectPoint == atConnectionPoint) {							
+							m.WithClay.onCommunication(this, m.AtConnectionPoint, signal);
 						}
 					}
 				}

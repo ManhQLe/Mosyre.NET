@@ -40,12 +40,12 @@ namespace Mosyre
 			}
 		}
 
-		protected object this[object connectPoint] {
+		public object this[object connectPoint] {
 			get {
 				return _signalStore[connectPoint];
 			}
 			set {						
-				signalProcessing(connectPoint, value);
+				processSignal(connectPoint, value);
 			}
 		}
 
@@ -64,14 +64,15 @@ namespace Mosyre
 
 		public override void onCommunication(IClay fromClay, object atConnectionPoint, object signal)
 		{
-
+			
 			//Check to see if it is in connectiton list
 			if (_contacts.ContainsKey(atConnectionPoint) &&
 				_contacts[atConnectionPoint].IndexOf(fromClay) >= 0
+				&& ConnectPoints.IndexOf(atConnectionPoint)>=0
 				)
 			{
 				this[atConnectionPoint] = signal;
-			}			
+			}
 		}
 
 		public override void onConnection(IClay withClay, object atConnectionPoint)
@@ -87,10 +88,10 @@ namespace Mosyre
 
 		}
 
-		private void signalProcessing(object connectPoint, object signal) {
+		private void processSignal(object connectPoint, object signal) {
 			List<Object> cps = ConnectPoints;
 			//This is important to check for fire stage		
-			bool isInput = cps.IndexOf(connectPoint) >= 0;
+			bool isInput = cps.IndexOf(connectPoint) >= 0;			
 			if (isInput)
 			{				
 				_signalStore[connectPoint] = signal;

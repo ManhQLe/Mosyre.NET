@@ -8,8 +8,8 @@ namespace Mosyre
 {
 	public class SClayLayout
 	{
-		public object connectPoint { get; set; }
-		public object atConnectionpoint { get; set; }
+		public object HostConnectPoint { get; set; }
+		public object AtConnectionPoint { get; set; }
 		public IClay WithClay { get; set; }
 	}
 }

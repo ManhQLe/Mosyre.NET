@@ -48,6 +48,7 @@
     <Compile Include="TestConduit.cs" />
     <Compile Include="TestFrame.cs" />
     <Compile Include="TestResponsiveClay.cs" />
+    <Compile Include="TestSClay.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
