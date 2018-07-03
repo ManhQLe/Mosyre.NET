@@ -110,6 +110,8 @@ namespace Mosyre
 			}
 			else // Output
 			{
+				if (!_contacts.ContainsKey(connectPoint))
+					return;
 				List<IClay> others = _contacts[connectPoint];
 				foreach (IClay c in others)
 				{

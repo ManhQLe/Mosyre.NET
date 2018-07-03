@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mosyre;
+using System.Threading;
 
 namespace Test
 {
@@ -81,6 +82,25 @@ namespace Test
 			Assert(SumR, 0);
 			s.onCommunication(this, "B", 3);
 			Assert(SumR, 5);
+
+			s.onCommunication(this, "C", 8);
+			Thread.Sleep(100);
+			Assert(MulR, 40);
+
+			s.onCommunication(this, "C", 4);
+			Thread.Sleep(100);
+			Assert(MulR, 20);
+
+
+			s.onCommunication(this, "A", 3);
+			Thread.Sleep(100);
+			Assert(SumR, 6);
+			Assert(MulR, 24);
+
+			s.onCommunication(this, "B", 9);
+			Thread.Sleep(100);
+			Assert(SumR, 12);
+			Assert(MulR, 48);
 		}
 	}
 }
