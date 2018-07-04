@@ -10,23 +10,43 @@ namespace Mosyre
 
 	public class SClay : AttribClay
 	{
-		protected List<object> contactPoints;
 		protected List<SClayLayout> _map;
-		protected Dictionary<object, List<IClay>> _contacts = new Dictionary<object, List<IClay>>();
+		protected Dictionary<object, Conduit> _contacts = new Dictionary<object, Conduit>();
 		public SClay() : this(null) {
 
 		}
 
 		public SClay(Dictionary<string, object> agreement) : base(agreement)
 		{
-			contactPoints = new List<object>();
-			_map= this.onBuild();			
+
+			List<SClayLayout> _map = this.onBuild();			
 
 			foreach (var e in _map) {
-				this.contactPoints.Add(e.HostConnectPoint);
-				Clay.MakeConnection(this, e.WithClay, e.HostConnectPoint, e.AtConnectionPoint);
+				Conduit con = null;
+				if (_contacts.ContainsKey(e.HostConnectPoint))
+				{
+					con = _contacts[e.HostConnectPoint];
+				}
+				else
+				{
+					con = new Conduit();
+					con.Link(this, e.HostConnectPoint);
+					_contacts[e.HostConnectPoint] = con;
+				}
+				con.Link(e.WithClay, e.AtConnectionPoint);
 			}
 
+		}
+
+		public object this[object connectPoint]
+		{	
+			set
+			{
+				if (_contacts.ContainsKey(connectPoint)) {
+					_contacts[connectPoint].onCommunication(this, connectPoint, value);
+				}
+
+			}
 		}
 
 		public List<SClayLayout> LayoutMap {
@@ -39,61 +59,16 @@ namespace Mosyre
 		}
 
 		public override void onCommunication(IClay fromClay, object atConnectionPoint, object signal)
-		{
-			var r = _map.Find(m => m.WithClay == fromClay && m.AtConnectionPoint == atConnectionPoint);
-			//From Map			
-			if (r != null)
-			{
-				if (_contacts.ContainsKey(r.HostConnectPoint))
-				{
-					var clays = _contacts[r.HostConnectPoint].FindAll(c => c != fromClay);
-					var internals = _map.FindAll(m => clays.IndexOf(m.WithClay) >= 0 && m.HostConnectPoint == r.HostConnectPoint);
-
-					var outs = clays.Where(x => internals.FindIndex(m => m.WithClay == x) < 0);
-
-					foreach (var m in internals) {
-						m.WithClay.onCommunication(this, m.AtConnectionPoint, signal);
-					}
-
-					foreach (var c in outs)
-					{						
-						c.onCommunication(this, r.HostConnectPoint, signal);
-					}
-				}
-
-			}
-			else {				
-
-				var clays = _contacts[atConnectionPoint];
-				if (clays != null) {
-					foreach (var m in _map) {						
-						if (m.HostConnectPoint == atConnectionPoint) {							
-							m.WithClay.onCommunication(this, m.AtConnectionPoint, signal);
-						}
-					}
-				}
-			}
+		{		
+			
 		}
 
 
 		public override void onConnection(IClay withClay, object atConnectionPoint)
 		{
-			List<IClay> clays;
-
-			if (_contacts.ContainsKey(atConnectionPoint))
-			{
-				clays = _contacts[atConnectionPoint];
+			if (_contacts.ContainsKey(atConnectionPoint)) {
+				_contacts[atConnectionPoint].Link(withClay, atConnectionPoint);
 			}
-			else
-			{
-				clays = new List<IClay>();
-			}
-
-			if (clays.FindIndex(c => c == withClay) <= 0) {
-				clays.Add(withClay);
-			}
-
-			_contacts[atConnectionPoint] = clays;
 		}
 
 		protected List<SClayLayout> onBuild() {

@@ -53,6 +53,9 @@ namespace Mosyre
 
 		public override void onConnection(IClay withClay, object atConnectionPoint)
 		{
+			if (this == withClay) //No dont want to connect to me again
+				return;
+
 			//Get all current connection with this clays
 			List<object> cps = _contacts.ContainsKey(withClay)
 				? _contacts[withClay]
