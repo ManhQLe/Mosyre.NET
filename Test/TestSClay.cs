@@ -47,7 +47,7 @@ namespace Test
 				{ "ConnectPoints",new List<Object>{ "X","Y" }}
 			});
 
-			Conduit.CreateLink(Add, "Z", Mul, "X");
+			///Conduit.CreateLink(Add, "Z", Mul, "X");
 
 			SClay s = new SClay(new Dictionary<string, object>
 			{
@@ -62,7 +62,17 @@ namespace Test
 							HostConnectPoint = "B",
 							AtConnectionPoint = "Y",
 							WithClay = Add
-						},						
+						},
+						new SClayLayout{
+							HostConnectPoint = "SUM",
+							AtConnectionPoint = "Z",
+							WithClay = Add
+						},
+						new SClayLayout{
+							HostConnectPoint = "SUM",
+							AtConnectionPoint = "X",
+							WithClay = Mul
+						},
 						new SClayLayout{
 							HostConnectPoint = "C",
 							AtConnectionPoint = "Y",

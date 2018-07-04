@@ -40,16 +40,27 @@ namespace Mosyre
 
 		public override void onCommunication(IClay fromClay, object atConnectionPoint, object signal)
 		{
-			var r = _map.Find(m => m.WithClay == fromClay);
-			//From Map
+			var r = _map.Find(m => m.WithClay == fromClay && m.AtConnectionPoint == atConnectionPoint);
+			//From Map			
 			if (r != null)
 			{
-				var clays = _contacts[atConnectionPoint];
-				foreach (var c in clays)
+				if (_contacts.ContainsKey(r.HostConnectPoint))
 				{
-					if (c != fromClay)
+					var clays = _contacts[r.HostConnectPoint].FindAll(c => c != fromClay);
+					var internals = _map.FindAll(m => clays.IndexOf(m.WithClay) >= 0 && m.HostConnectPoint == r.HostConnectPoint);
+
+					var outs = clays.Where(x => internals.FindIndex(m => m.WithClay == x) < 0);
+
+					foreach (var m in internals) {
+						m.WithClay.onCommunication(this, m.AtConnectionPoint, signal);
+					}
+
+					foreach (var c in outs)
+					{						
 						c.onCommunication(this, r.HostConnectPoint, signal);
+					}
 				}
+
 			}
 			else {				
 
